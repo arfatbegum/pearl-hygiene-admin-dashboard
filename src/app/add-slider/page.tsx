@@ -16,7 +16,7 @@ const auth = getAuth(app);
 const AddSliderProduct = () => {
     const [title, setTitle] = useState('');
     const [subtitle, setSubtitle] = useState('');
-    const [productId, setProductId] = useState(0);
+    const [productId, setProductId] = useState("");
     const [imageUrl, setImageUrl] = useState('');
     const [loading, setLoading] = useState(false);
     const [file, setFile] = useState(null);
@@ -74,7 +74,7 @@ const AddSliderProduct = () => {
             alert('Slider uploaded successfully!');
             setTitle('');
             setSubtitle('');
-            setProductId(0);
+            setProductId("");
             setFile(null);
             setImageUrl('');
         } catch (error) {

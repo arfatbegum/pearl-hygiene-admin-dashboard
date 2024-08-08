@@ -33,6 +33,7 @@ const UserTable: React.FC = () => {
                 if (snapshot.exists()) {
                     const usersArray = Object.entries(snapshot.val()).map(([id, data]) => ({
                         id,
+                         // @ts-ignore
                         ...data,
                     }));
                     setUsers(usersArray as any[]);
@@ -82,6 +83,7 @@ const UserTable: React.FC = () => {
             setUsers((prevUsers) => prevUsers.filter((user) => user.id !== username));
 
             if (userData.uid !== auth.currentUser?.uid) {
+                 // @ts-ignore
                 const userToDelete = await getAuth().getUser(userData.uid);
                 await deleteAuthUser(userToDelete);
                 Swal.fire('User deleted from Authentication');

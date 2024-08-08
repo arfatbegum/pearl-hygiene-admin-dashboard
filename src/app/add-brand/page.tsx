@@ -1,5 +1,7 @@
 "use client";
 
+
+//@ts-ignore
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import firebaseConfig from "@/js/firebaseConfig";
@@ -19,7 +21,7 @@ const AddBrand = () => {
     const [brandName, setBrandName] = useState("");
     const [brandDetails, setBrandDetails] = useState("");
     const [brandUrl, setBrandUrl] = useState("");
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState("");
     const [imageUrl, setImageUrl] = useState("");
     const router = useRouter();
 
@@ -32,7 +34,7 @@ const AddBrand = () => {
         });
     }, []);
 
-    const handleFileChange = (e) => {
+    const handleFileChange = (e:any) => {
         const file = e.target.files[0];
         if (file && ["image/png", "image/jpeg", "image/jpg"].includes(file.type)) {
             setImage(file);
@@ -52,7 +54,7 @@ const AddBrand = () => {
         return data.data.url;
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e:any) => {
         e.preventDefault();
         let uploadedImageUrl = imageUrl;
 

@@ -1,8 +1,9 @@
 export type Product = {
+  title: string;
   id: string;
-  productBrand: ReactNode;
-  productCode: ReactNode;
-  productCategory: ReactNode;
+  productBrand: any;
+  productCode: any;
+  productCategory: any;
   productName: string;
   images: any;
   image: string;

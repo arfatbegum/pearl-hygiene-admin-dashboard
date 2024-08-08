@@ -4,7 +4,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import FeaturedProducts from "@/components/Tables/FeaturedTable";
 
 export const metadata: Metadata = {
-  title: "Categories Table | Pearl Hygiene -  Dashboard",
+  title: "Featured Products Table | Pearl Hygiene -  Dashboard",
   description:
     "",
 };

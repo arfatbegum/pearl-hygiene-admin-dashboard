@@ -4,7 +4,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import UserTable from "@/components/Tables/UserTable";
 
 export const metadata: Metadata = {
-  title: "Brand Table | Pearl Hygiene -  Dashboard",
+  title: "Administrator Table | Pearl Hygiene -  Dashboard",
   description:
     "",
 };

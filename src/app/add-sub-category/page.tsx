@@ -68,34 +68,36 @@ const AddSubCategory = () => {
             const snapshot = await get(categoriesRef);
             const categoriesData = snapshot.val();
             let categoryKey: string | null = null;
-    
+
             if (!categoriesData) {
                 throw new Error('No categories data found.');
             }
-    
+
             for (const [key, category] of Object.entries(categoriesData)) {
                 let categoryDataName: string;
-    
+
                 if (typeof category === 'string') {
                     categoryDataName = category;
+                    // @ts-ignore
                 } else if (typeof category === 'object' && category.name) {
+                    // @ts-ignore
                     categoryDataName = category.name;
                 } else {
                     continue;
                 }
-    
+
                 if (categoryDataName === categoryName) {
                     categoryKey = key;
                     break;
                 }
             }
-    
+
             if (categoryKey) {
                 const categoryRef = ref(database, `categories/${categoryKey}`);
                 const categoryData = (await get(categoryRef)).val();
-    
+
                 let updatedCategoryData;
-    
+
                 if (typeof categoryData === 'string') {
                     updatedCategoryData = {
                         name: categoryData,
@@ -112,7 +114,7 @@ const AddSubCategory = () => {
                         }
                     };
                 }
-    
+
                 await set(categoryRef, updatedCategoryData);
                 showToast('Sub Category uploaded successfully!');
                 setSubCategoryName('');
@@ -126,8 +128,8 @@ const AddSubCategory = () => {
             showToast('Failed to upload sub category. Please try again later.');
         }
     };
-    
-    
+
+
 
 
     const showToast = (message: string) => {

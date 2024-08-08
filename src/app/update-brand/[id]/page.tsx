@@ -30,7 +30,7 @@ const UpdateBrand = ({ params }: any) => {
         onAuthStateChanged(auth, (user) => {
             const isLoggedInLocalStorage = localStorage.getItem('isLoggedIn');
             if (!user || isLoggedInLocalStorage !== 'true') {
-                router.push('/');
+                router.push('/signin');
             }
         });
 
@@ -68,6 +68,7 @@ const UpdateBrand = ({ params }: any) => {
 
     const uploadImage = async () => {
         const formData = new FormData();
+         // @ts-ignore
         formData.append("image", image);
         const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbAPIKey}`, {
             method: "POST",

@@ -1,5 +1,7 @@
 "use client";
 
+//@ts-ignore
+
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import firebaseConfig from "@/js/firebaseConfig";

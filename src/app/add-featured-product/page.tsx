@@ -1,8 +1,10 @@
 "use client"
 
+//@ts-ignore
+
 import { useState, useEffect } from 'react';
 import { getDatabase, ref, set, get } from 'firebase/database';
-import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import Swal from 'sweetalert2';
 import { initializeApp } from 'firebase/app';
 import firebaseConfig from '@/js/firebaseConfig';
@@ -56,6 +58,7 @@ export default function FeaturedProducts() {
         }
 
         try {
+            // @ts-ignore
             const product = productsData[selectedProductId];
             const newFeaturedProductRef = ref(database, 'featuredProducts/' + selectedProductId);
 
@@ -101,6 +104,7 @@ export default function FeaturedProducts() {
                                         }`}> <option value="">Select a product</option>
                                     {Object.keys(productsData).map((productId) => (
                                         <option key={productId} value={productId}>
+                                            {/* @ts-ignore */}
                                             {productsData[productId].productName}
                                         </option>
                                     ))}

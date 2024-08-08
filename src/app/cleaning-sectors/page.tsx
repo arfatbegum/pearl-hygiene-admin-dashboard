@@ -4,7 +4,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CleaningSectors from "@/components/Tables/CleaningSectors";
 
 export const metadata: Metadata = {
-  title: "Categories Table | Pearl Hygiene -  Dashboard",
+  title: "Cleaning Sector Table | Pearl Hygiene -  Dashboard",
   description:
     "",
 };
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const TablesPage = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Featured Products" />
+      <Breadcrumb pageName="Cleaning Sectors" />
       <div className="flex flex-col gap-10">
         <CleaningSectors />
       </div>

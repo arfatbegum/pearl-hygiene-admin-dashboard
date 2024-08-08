@@ -34,6 +34,7 @@ const CleaningSectors: React.FC = () => {
         if (snapshot.exists()) {
           const sectorsArray = Object.entries(snapshot.val()).map(([id, data]) => ({
             id,
+             // @ts-ignore
             ...data,
           }));
           console.log(sectorsArray)

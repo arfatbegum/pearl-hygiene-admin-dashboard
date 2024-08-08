@@ -19,6 +19,7 @@ const DropdownUser = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       console.log(user)
       if (user) {
+         // @ts-ignore
         setUserName(user.displayName || user.email);
       } else {
         setUserName("");

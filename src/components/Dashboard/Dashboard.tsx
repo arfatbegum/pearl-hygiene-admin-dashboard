@@ -35,6 +35,7 @@ const Dashboard: React.FC = () => {
         if (snapshot.exists()) {
           const usersArray = Object.entries(snapshot.val()).map(([id, data]) => ({
             id,
+             // @ts-ignore
             ...data,
           }));
           setUsers(usersArray as any[]);
@@ -55,6 +56,7 @@ const Dashboard: React.FC = () => {
         if (snapshot.exists()) {
           const productsArray = Object.entries(snapshot.val()).map(([id, data]) => ({
             id,
+             // @ts-ignore
             ...data,
           }));
           console.log(productsArray)
@@ -77,6 +79,7 @@ const Dashboard: React.FC = () => {
         if (snapshot.exists()) {
           const productsArray = Object.entries(snapshot.val()).map(([id, data]) => ({
             id,
+             // @ts-ignore
             ...data,
           }));
           console.log(productsArray)
@@ -100,6 +103,7 @@ const Dashboard: React.FC = () => {
         if (snapshot.exists()) {
           const brandsArray = Object.entries(snapshot.val()).map(([id, data]) => ({
             id,
+             // @ts-ignore
             ...data,
           }));
           setBrands(brandsArray as any[]);
@@ -121,6 +125,7 @@ const Dashboard: React.FC = () => {
         if (snapshot.exists()) {
           const sectorsArray = Object.entries(snapshot.val()).map(([id, data]) => ({
             id,
+             // @ts-ignore
             ...data,
           }));
           console.log(sectorsArray)

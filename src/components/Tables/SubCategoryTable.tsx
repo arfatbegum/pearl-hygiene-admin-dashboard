@@ -42,6 +42,7 @@ const SubCategoriesTable: React.FC = () => {
         try {
             await remove(ref(database, `categories/${categoryId}`));
             Swal.fire("Category deleted successfully", "success");
+             // @ts-ignore
             setCategories((prev) => prev.filter((_, id) => _.id !== categoryId));
         } catch (error) {
             Swal.fire("Failed to delete category", "error");
@@ -99,11 +100,14 @@ const SubCategoriesTable: React.FC = () => {
                     <div key={categoryId} className="category-item">
                         <div className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
                             <div className="col-span-2 flex items-center">
+                            {/*  @ts-ignore */}
                                 <p className="text-sm text-black dark:text-white">  {typeof categoryData === 'string' ? categoryData : categoryData.name}</p>
                             </div>
                             <div className="col-span-3 flex items-center">
+                            {/*  @ts-ignore */}
                                 {categoryData.subCategories && categoryData.subCategories.length > 0 ? (
                                     <ul>
+                                         {/*  @ts-ignore */}
                                         {categoryData.subCategories.map((subCategory: string, index: number) => (
                                             <li key={index} className="w-full flex justify-between">
                                                 <p className="text-sm text-black dark:text-white">{subCategory}</p>

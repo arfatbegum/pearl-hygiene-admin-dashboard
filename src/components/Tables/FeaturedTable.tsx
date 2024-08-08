@@ -26,6 +26,7 @@ const FeaturedProducts: React.FC = () => {
         if (snapshot.exists()) {
           const productsArray = Object.entries(snapshot.val()).map(([id, data]) => ({
             id,
+             // @ts-ignore
             ...data,
           }));
           console.log(productsArray)

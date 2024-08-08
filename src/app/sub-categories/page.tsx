@@ -4,7 +4,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import SubCategoriesTable from "@/components/Tables/SubCategoryTable";
 
 export const metadata: Metadata = {
-  title: "Categories Table | Pearl Hygiene -  Dashboard",
+  title: "Sub Categories Table | Pearl Hygiene -  Dashboard",
   description:
     "",
 };
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const TablesPage = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Categories" />
+      <Breadcrumb pageName="Sub Categories" />
       <div className="flex flex-col gap-10">
         <SubCategoriesTable />
       </div>

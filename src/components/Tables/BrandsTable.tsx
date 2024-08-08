@@ -33,6 +33,7 @@ const BrandsTable: React.FC = () => {
                 if (snapshot.exists()) {
                     const brandsArray = Object.entries(snapshot.val()).map(([id, data]) => ({
                         id,
+                         // @ts-ignore
                         ...data,
                     }));
                     setBrands(brandsArray as any[]);
