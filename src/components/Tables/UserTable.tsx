@@ -123,7 +123,7 @@ const UserTable: React.FC = () => {
                     <p className="font-medium">Username</p>
                 </div>
                 <div className="col-span-2 hidden items-center sm:flex">
-                    <p className="font-medium">email</p>
+                    <p className="font-medium">Email</p>
                 </div>
                 <div className="col-span-3 flex items-center">
                     <p className="font-medium">Action</p>

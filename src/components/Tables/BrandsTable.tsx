@@ -69,9 +69,9 @@ const BrandsTable: React.FC = () => {
           try {
             await remove(brandRef);
             setBrands((prevSectors) => prevSectors.filter((sector) => sector.id !== brandId));
-            Swal.fire('Deleted!', 'The cleaning sector has been deleted.', 'success');
+            Swal.fire('Deleted!', 'The Brand has been deleted.', 'success');
           } catch (error) {
-            Swal.fire('Error!', 'Failed to delete cleaning sector. Please try again later.', 'error');
+            Swal.fire('Error!', 'Failed to delete Brand. Please try again later.', 'error');
             console.error('Error deleting cleaning sector:', error);
           }
         }
@@ -120,7 +120,7 @@ const BrandsTable: React.FC = () => {
                 >
                     <div className="col-span-3 flex items-center">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                            <div className="h-12.5 w-15 rounded-md">
+                            <div className="w-15 rounded-md overflow-hidden">
                                 <Image
                                     src={brand?.image}
                                     width={60}

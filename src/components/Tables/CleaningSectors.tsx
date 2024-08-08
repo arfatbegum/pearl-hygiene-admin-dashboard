@@ -118,7 +118,7 @@ const CleaningSectors: React.FC = () => {
         >
           <div className="col-span-3 flex items-center">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-              <div className="h-12.5 w-15 rounded-md">
+              <div className="w-15 rounded-md overflow-hidden">
                 <Image
                   src={sector?.image}
                   width={60}

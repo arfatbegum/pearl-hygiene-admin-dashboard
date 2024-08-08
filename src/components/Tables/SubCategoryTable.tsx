@@ -86,13 +86,13 @@ const SubCategoriesTable: React.FC = () => {
 
             <div className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
                 <div className="col-span-2 hidden items-center sm:flex">
-                    <p className="font-bold text-primary">Category Name</p>
+                    <p className="font-medium">Category Name</p>
                 </div>
                 <div className="col-span-3 hidden items-center sm:flex">
-                    <p className="font-bold text-primary">Sub Categories Name</p>
+                    <p className="font-medium">Sub Categories Name</p>
                 </div>
                 <div className="col-span-1 flex items-center text-center">
-                    <p className="font-bold text-primary">Category Action</p>
+                    <p className="font-medium">Category Action</p>
                 </div>
             </div>
             <div id="categories-data">

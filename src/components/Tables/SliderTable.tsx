@@ -15,30 +15,28 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth(app);
 const SliderProducts: React.FC = () => {
-    const [products, setProducts] = useState<Product[]>([]);
+    const [slider, setSlider] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
-            const isLoggedInLocalStorage = localStorage.getItem('isLoggedIn');
-            if (!user || isLoggedInLocalStorage !== 'true') {
-                window.location.href = '../';
+            const isLoggedInLocalStorage = localStorage.getItem("isLoggedIn");
+            if (!user || isLoggedInLocalStorage !== "true") {
+                window.location.href = "/signin";
             }
         });
 
         const fetchProducts = async () => {
             try {
-                const productsRef = ref(database, 'sliders');
+                const productsRef = ref(database, "sliders");
                 const snapshot = await get(productsRef);
                 if (snapshot.exists()) {
                     const productsArray = Object.entries(snapshot.val()).map(([id, data]) => ({
                         id,
-                         // @ts-ignore
                         ...data,
                     }));
-                    console.log(productsArray);
-                    setProducts(productsArray as Product[]);
+                    setSlider(productsArray as any[]);
                 } else {
                     setError("No products found.");
                 }
@@ -53,17 +51,29 @@ const SliderProducts: React.FC = () => {
         fetchProducts();
     }, []);
 
-    const deleteProduct = async (sliderId: string) => {
-        try {
-            console.log(`Attempting to delete brand with ID: ${sliderId}`);
-            const productRef = ref(database, `sliders/${sliderId}`);
-            await remove(productRef);
-            setProducts((prevProducts) => prevProducts.filter((product) => product.id !== sliderId));
-            console.log(`Successfully deleted brand with ID: ${sliderId}`);
-            Swal.fire("Success!", "Product deleted successfully", "success");
-        } catch (error) {
-            Swal.fire("Error!", "Failed to delete product", "error");
-            console.error("Error deleting product:", error);
+    const deleteSlider = async (sliderId: string) => {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "This action cannot be undone.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        });
+
+        if (result.isConfirmed) {
+            const brandRef = ref(database, `sliders/${sliderId}`);
+
+            try {
+                await remove(brandRef);
+                setSlider((prevSectors) => prevSectors.filter((slider) => slider.id !== sliderId));
+                console.log(sliderId)
+                Swal.fire('Deleted!', 'The Brand has been deleted.', 'success');
+            } catch (error) {
+                Swal.fire('Error!', 'Failed to delete Slider. Please try again later.', 'error');
+                console.error('Error deleting slider:', error);
+            }
         }
     };
 
@@ -101,14 +111,14 @@ const SliderProducts: React.FC = () => {
                 </div>
             </div>
 
-            {products.map((product, key) => (
+            {slider.map((product, key) => (
                 <div
                     className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
                     key={key}
                 >
                     <div className="col-span-3 flex items-center">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                            <div className="h-12.5 w-15 rounded-md">
+                            <div className="w-15 rounded-md overflow-hidden">
                                 <Image
                                     src={product?.image}
                                     width={60}
@@ -124,7 +134,8 @@ const SliderProducts: React.FC = () => {
                     <div className="col-span-1 flex items-center">
                         <p className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                             <div className="flex items-center space-x-3.5">
-                                <button onClick={() => deleteProduct(product.id)} className="hover:text-primary">
+                                <button
+                                    onClick={() => deleteSlider(product.id)} className="hover:text-primary">
                                     <svg
                                         className="fill-current "
                                         width="18"
