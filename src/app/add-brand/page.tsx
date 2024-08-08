@@ -6,6 +6,7 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import firebaseConfig from "@/js/firebaseConfig";
 import imgbbAPIKey from "@/js/imgbbConfig";
+import { Editor } from "@tinymce/tinymce-react";
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getDatabase, ref, push, set } from "firebase/database";
@@ -34,7 +35,7 @@ const AddBrand = () => {
         });
     }, []);
 
-    const handleFileChange = (e:any) => {
+    const handleFileChange = (e: any) => {
         const file = e.target.files[0];
         if (file && ["image/png", "image/jpeg", "image/jpg"].includes(file.type)) {
             setImage(file);
@@ -54,7 +55,7 @@ const AddBrand = () => {
         return data.data.url;
     };
 
-    const handleSubmit = async (e:any) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
         let uploadedImageUrl = imageUrl;
 
@@ -71,7 +72,7 @@ const AddBrand = () => {
         };
 
         const brandsRef = ref(database, 'brands');
-        const newBrandRef = push(brandsRef); // Generate a new key
+        const newBrandRef = push(brandsRef);
         set(newBrandRef, newBrand)
             .then(() => {
                 Swal.fire("Success!", "Brand added successfully", "success");
@@ -109,19 +110,6 @@ const AddBrand = () => {
 
                         <div className="mb-4.5">
                             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                                Brand Description
-                            </label>
-                            <textarea
-                                value={brandDetails}
-                                onChange={(e) => setBrandDetails(e.target.value)}
-                                placeholder="Brand Description"
-                                required
-                                className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                            />
-                        </div>
-
-                        <div className="mb-4.5">
-                            <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                                 Brand Website URL
                             </label>
                             <input
@@ -133,6 +121,29 @@ const AddBrand = () => {
                                 className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                             />
                         </div>
+
+                        <div className="mb-4.5">
+                            <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                Brand Description
+                            </label>
+                            <Editor
+                                apiKey="t8kmg7e4rwudb6di86xfy9jiwwuf7sncd7gl7gms1ct6cj1k"
+                                value={brandDetails}
+                                onEditorChange={(content) => setBrandDetails(content)}
+                                init={{
+                                    height: 500,
+                                    menubar: false,
+                                    plugins: [
+                                        'advlist autolink lists link image charmap print preview anchor',
+                                        'searchreplace visualblocks code fullscreen',
+                                        'insertdatetime media table paste code help wordcount'
+                                    ],
+                                    toolbar: 'undo redo | formatselect | bold italic backcolor | \
+        alignleft aligncenter alignright alignjustify | \
+        bullist numlist outdent indent | removeformat | help'
+                                }}
+                            />
+                        </div>  
 
                         <div className="mb-4.5">
                             <label className="mb-3 block text-sm font-medium text-black dark:text-white">
