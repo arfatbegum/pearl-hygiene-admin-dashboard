@@ -13,7 +13,7 @@ const TablesPage = () => {
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Administrator" />
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-10 h-dvh">
         <UserTable />
       </div>
     </DefaultLayout>

@@ -5,6 +5,8 @@ import Header from "@/components/Header";
 
 export default function DefaultLayout({
   children,
+  //@ts-ignore
+  searchQuery
 }: {
   children: React.ReactNode;
 }) {
@@ -19,8 +21,9 @@ export default function DefaultLayout({
 
         {/* <!-- ===== Content Area Start ===== --> */}
         <div className="relative flex flex-1 flex-col lg:ml-72.5">
-          {/* <!-- ===== Header Start ===== --> */}
-          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          {/* <!-- ===== Header Start ===== --*/}
+          {/*  @ts-ignore  */}
+          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} searchQuery={searchQuery} />
           {/* <!-- ===== Header End ===== --> */}
 
           {/* <!-- ===== Main Content Start ===== --> */}
