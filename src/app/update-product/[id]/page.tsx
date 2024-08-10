@@ -56,13 +56,31 @@ const UpdateProduct = ({ params }: any) => {
                     setSpecifications(productData.specifications || []);
                     setImageUrls(productData.images || []);
                     setSelectedCategory(productData.productCategory || {});
-                    setPrimaryIndex(0); // Reset primary index
+                    setPrimaryIndex(0); 
                 } else {
-                    Swal.fire("Error!",`No product found with ID}`, "error");
+                    Swal.fire("Error!", `No product found with ID`, "error");
                 }
             })
             .catch((error) => console.error('Error getting product data:', error));
     };
+
+    const handleCategoryChange = (e: any) => {
+        const selectedCategoryName = e.target.value;
+        setProduct({ ...product, productCategory: selectedCategoryName });
+    
+        const category = categories.find(
+            // @ts-ignore
+            (category) => category.name === selectedCategoryName
+        );
+    
+        if (category) {
+            setSelectedCategory(category);
+            setSubCategories(category.subCategories || []);
+        } else {
+            setSubCategories([]);
+        }
+    };
+    
 
     const getBrandsFromFirebase = () => {
         const brandsRef = ref(database, 'brands');
@@ -340,15 +358,9 @@ const UpdateProduct = ({ params }: any) => {
                                         id="product_category"
                                         name="product_category"
                                         // @ts-ignore
-                                        value={selectedCategory.categoryId || ''}
-                                        onChange={(e) => {
-                                            // @ts-ignore
-                                            const category = categories.find((cat) => cat.categoryId === e.target.value);
-                                            // @ts-ignore
-                                            setSelectedCategory(category);
-                                            // @ts-ignore
-                                            setSubCategories(category.subCategories || []);
-                                        }}
+                                        value={product.productCategory || ''}
+                                        onChange={handleCategoryChange}
+        
 
                                         className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${isOptionSelected ? "text-black dark:text-white" : ""
                                             }`}
@@ -356,13 +368,28 @@ const UpdateProduct = ({ params }: any) => {
                                         <option value="" disabled className="text-body dark:text-bodydark">
                                             Select Category
                                         </option>
-                                        {categories.map((category) => (
-                                            // @ts-ignore
-                                            <option key={category.id} value={category.id}>
-                                                {/* @ts-ignore */}
-                                                {category.name}
-                                            </option>
-                                        ))}
+                                        {Array.isArray(categories) && categories.length > 0 ? (
+                                            categories.map((category, index) => (
+                                                // @ts-ignore
+                                                <option
+                                                    key={index}
+                                                    value={
+                                                        typeof category === "string"
+                                                            ? category
+                                                            : // @ts-ignore
+                                                            category.name
+                                                    }
+                                                >
+                                                    {/* @ts-ignore */}
+                                                    {typeof category === "string"
+                                                        ? category
+                                                        : // @ts-ignore
+                                                        category.name}
+                                                </option>
+                                            ))
+                                        ) : (
+                                            <option disabled>No category</option>
+                                        )}
                                     </select>
 
                                     <span className="absolute right-4 top-1/2 z-30 -translate-y-1/2">

@@ -45,11 +45,18 @@ const AddSector = () => {
         setLoading(false);
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setImageFile(e.target.files[0]);
+    const handleFileChange = (e: any) => {
+        const file = e.target.files[0];
+        if (file && ["image/png", "image/jpeg", "image/jpg"].includes(file.type)) {
+          setImageFile(file);
+        } else {
+          Swal.fire(
+            "Error!",
+            "Please select a PNG, JPG, or JPEG image...",
+            "error",
+          );
         }
-    };
+      };
 
     const uploadToImgBB = async (file: any) => {
         const formData = new FormData();

@@ -22,6 +22,8 @@ const AddProduct = () => {
     const [productBrand, setProductBrand] = useState('');
     const [productCategory, setProductCategory] = useState('');
     const [productSubCategory, setProductSubCategory] = useState('');
+    const [cleaningSector, setCleaningSector] = useState("");
+    const [cleaningSectors, setCleaningSectors] = useState([]);
     const [specifications, setSpecifications] = useState([]);
     const [primaryIndex, setPrimaryIndex] = useState(0);
     const [files, setFiles] = useState([]);
@@ -39,6 +41,26 @@ const AddProduct = () => {
             }
         });
 
+        const fetchCleaningSectors = async () => {
+            const sectorsRef = ref(database, "cleaning-sectors");
+            const snapshot = await get(sectorsRef);
+            const sectorsData = snapshot.val();
+            if (sectorsData) {
+                // @ts-ignore
+                const sectorsArray = Object.entries(snapshot.val()).map(
+                    ([id, data]) => ({
+                        id,
+                        // @ts-ignore
+                        ...data,
+                    }),
+                );
+
+                // @ts-ignore
+                setCleaningSectors(sectorsArray);
+            }
+        };
+
+
         const fetchBrands = async () => {
             const brandsRef = ref(database, 'brands');
             const snapshot = await get(brandsRef);
@@ -50,15 +72,15 @@ const AddProduct = () => {
         };
 
         const fetchCategories = async () => {
-            const categoriesRef = ref(database, 'categories');
+            const categoriesRef = ref(database, "categories");
             const snapshot = await get(categoriesRef);
             const categoriesData = snapshot.val();
-            console.log(categoriesData)
+            console.log(categoriesData);
             if (categoriesData) {
                 setCategories(Object.values(categoriesData));
             }
         };
-
+        fetchCleaningSectors();
         fetchBrands();
         fetchCategories();
     }, []);
@@ -111,7 +133,7 @@ const AddProduct = () => {
                     const url = await uploadToImgBB(file);
                     imageUrls.push(url);
                 } catch (error) {
-                    Swal.fire("Error!",'Failed to upload image. Please try again later.', "error");
+                    Swal.fire("Error!", 'Failed to upload image. Please try again later.', "error");
                     throw error;
                 }
             }));
@@ -143,6 +165,7 @@ const AddProduct = () => {
             productBrand,
             images: imageUrls,
             specifications,
+            productCleaningSector: cleaningSector,
         };
 
         set(newProductRef, productData)
@@ -255,28 +278,59 @@ const AddProduct = () => {
 
                         <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                             <div className="w-full xl:w-1/2">
-                                <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                <label className="mb-3 block text-md font-medium text-black dark:text-white">
                                     Product Category
                                 </label>
                                 <div className="relative z-20 bg-transparent dark:bg-form-input">
                                     <select
-                                        value={productCategory} onChange={(e) => setProductCategory(e.target.value)}
+                                        value={productCategory}
+                                        onChange={(e) => {
+                                            const selectedCategory = e.target.value;
+                                            setProductCategory(e.target.value);
+
+                                            const category = categories.find(
+                                                // @ts-ignore
+                                                (category) => category?.name === selectedCategory,
+                                            );
+
+                                            if (category) {
+                                                // @ts-ignore
+                                                setSubCategories(category?.subCategories || []);
+                                            } else {
+                                                setSubCategories([]);
+                                            }
+                                        }}
                                         className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${isOptionSelected ? "text-black dark:text-white" : ""
                                             }`}
                                     >
-                                        <option value="" disabled className="text-body dark:text-bodydark">
+                                        <option
+                                            value=""
+                                            disabled
+                                            className="text-body dark:text-bodydark"
+                                        >
                                             Select Category
                                         </option>
                                         {Array.isArray(categories) && categories.length > 0 ? (
                                             categories.map((category, index) => (
                                                 // @ts-ignore
-                                                <option key={index} value={typeof category === 'string' ? category : category.name}>
+                                                <option
+                                                    key={index}
+                                                    value={
+                                                        typeof category === "string"
+                                                            ? category
+                                                            : // @ts-ignore
+                                                            category.name
+                                                    }
+                                                >
                                                     {/* @ts-ignore */}
-                                                    {typeof category === 'string' ? category : category.name}
+                                                    {typeof category === "string"
+                                                        ? category
+                                                        : // @ts-ignore
+                                                        category.name}
                                                 </option>
                                             ))
                                         ) : (
-                                            <option disabled>No categories available</option>
+                                            <option disabled>No category</option>
                                         )}
                                     </select>
 
@@ -303,23 +357,28 @@ const AddProduct = () => {
                             </div>
 
                             <div className="w-full xl:w-1/2">
-                                <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                                <label className="mb-3 block text-md font-medium text-black dark:text-white">
                                     Sub-Category
                                 </label>
                                 <div className="relative z-20 bg-transparent dark:bg-form-input">
                                     <select
                                         value={productSubCategory}
                                         onChange={(e) => setProductSubCategory(e.target.value)}
-                                        className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${isOptionSelected ? "text-black dark:text-white" : ""}`}>
-                                        <option value="" disabled>Select Sub-Category</option>
-                                        {/* @ts-ignore */}
-                                        {categories.subCategories && categories.subCategories.length > 0 ? (
-                                            // @ts-ignore
-                                            categories.subCategories.map((subCategory: string, index: number) => (
-                                                <option key={index} value={subCategory}>{subCategory}</option>
+                                        className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
+                                    >
+                                        <option value="" disabled>
+                                            Select Sub-Category
+                                        </option>
+                                        {subCategories.length > 0 ? (
+                                            subCategories.map((subCategory, index) => (
+                                                <option key={index} value={subCategory}>
+                                                    {subCategory}
+                                                </option>
                                             ))
                                         ) : (
-                                            <option value="" disabled>No subcategories</option>
+                                            <option value="" disabled>
+                                                None
+                                            </option>
                                         )}
                                     </select>
 
@@ -344,6 +403,59 @@ const AddProduct = () => {
                                     </span>
                                 </div>
                             </div>
+                        </div>
+
+                        <div className="mb-4.5">
+                            <label className="mb-3 block text-md font-medium text-black dark:text-white">
+                                Cleaning Sector
+                            </label>
+
+                            <select
+                                id="cleaning_sector"
+                                value={cleaningSector}
+                                onChange={(e) => setCleaningSector(e.target.value)}
+                                className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent px-5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${isOptionSelected ? "text-black dark:text-white" : ""
+                                    }`}
+                            >
+                                <option
+                                    value=""
+                                    disabled
+                                    className="text-black dark:text-bodydark"
+                                >
+                                    Select Cleaning Sector
+                                </option>
+                                {cleaningSectors.map((sector, index) => (
+                                    <option
+                                        key={index}
+                                        //@ts-ignore
+                                        value={sector.id}
+                                        className="text-black dark:text-bodydark"
+                                    >
+                                        {/* @ts-ignore */}
+                                        {sector.id}
+                                    </option>
+                                ))}
+                            </select>
+
+                            <span className="z-300 absolute right-16">
+                                <svg
+                                    className="fill-current"
+                                    width="24"
+                                    height="30"
+                                    viewBox="0 0 24 10"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <g opacity="0.8">
+                                        <path
+                                            fillRule="evenodd"
+                                            clipRule="evenodd"
+                                            d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                                            fill="#344952"
+                                        />
+                                    </g>
+                                </svg>
+                            </span>
                         </div>
 
                         <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
@@ -489,8 +601,8 @@ const AddProduct = () => {
                         </button>
                     </div>
                 </form>
-            </div>
-        </DefaultLayout>
+            </div >
+        </DefaultLayout >
     );
 };
 

@@ -13,7 +13,8 @@ import Loader from "../common/Loader";
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-const ProductTable: React.FC = () => {
+// @ts-ignore
+const ProductTable: React.FC = ({ searchQuery }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,11 +27,22 @@ const ProductTable: React.FC = () => {
         if (snapshot.exists()) {
           const productsArray = Object.entries(snapshot.val()).map(([id, data]) => ({
             id,
-             // @ts-ignore
+            // @ts-ignore
             ...data,
           }));
-          console.log(productsArray)
-          setProducts(productsArray as Product[]);
+
+          // Filter products based on searchQuery
+          const filteredProducts = productsArray.filter(product => {
+            if (!searchQuery) return true; // Display all products if searchQuery is empty or not present
+            const queryLower = searchQuery.toLowerCase();
+            return (
+              product.productName.toLowerCase().includes(queryLower) ||
+              product.productBrand.toLowerCase().includes(queryLower) ||
+              product.productCategory.toLowerCase().includes(queryLower)
+            );
+          });
+
+          setProducts(filteredProducts as Product[]);
         } else {
           setError("No products found.");
         }
@@ -43,7 +55,7 @@ const ProductTable: React.FC = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [searchQuery]);
 
 
   const deleteProduct = async (productId: string) => {
@@ -71,7 +83,7 @@ const ProductTable: React.FC = () => {
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="flex justify-between px-4 py-6 md:px-6 xl:px-7.5">
         <h4 className="text-xl font-semibold text-black dark:text-white">
-          Top Products
+          Products
         </h4>
         <div>    <Link
           href="/add-product"
@@ -82,10 +94,13 @@ const ProductTable: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
-        <div className="col-span-3 flex items-center">
+        <div className="col-span-2 flex items-center">
+          <p className="font-medium">Image</p>
+        </div>
+        <div className="col-span-2 flex items-center">
           <p className="font-medium">Product Name</p>
         </div>
-        <div className="col-span-2 hidden items-center sm:flex">
+        <div className="col-span-1 hidden items-center sm:flex">
           <p className="font-medium">Category</p>
         </div>
         <div className="col-span-1 flex items-center">
@@ -104,38 +119,45 @@ const ProductTable: React.FC = () => {
           className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
           key={key}
         >
-          <div className="col-span-3 flex items-center">
+          <div className="col-span-2 flex items-center m-1">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-              <div className="w-15 rounded-md overflow-hidden">
+
+              <div className="w-35 overflow-hidden rounded-sm">
                 <Image
                   src={product?.images?.length > 0 ? product?.images[0] : '/default-image.png'}
-                  width={60}
-                  height={50}
+                  width={120}
+                  height={120}
                   alt={product.productName}
+                  className="rounded-sm"
                 />
               </div>
-              <p className="text-sm text-black dark:text-white">
-                {product.productName}
-              </p>
             </div>
           </div>
-          <div className="col-span-2 hidden items-center sm:flex">
-            <p className="text-sm text-black dark:text-white">
+
+<div className="col-span-2 flex items-center m-1">
+
+<p className="text-md text-black dark:text-white">
+                {product.productName}
+              </p>
+</div>
+
+          <div className="col-span-1 hidden items-center sm:flex m-1">
+            <p className="text-md text-black dark:text-white">
               {product.productCategory}
             </p>
           </div>
-          <div className="col-span-1 flex items-center">
-            <p className="text-sm text-black dark:text-white">
+          <div className="col-span-1 flex items-center m-1">
+            <p className="text-md text-black dark:text-white">
               {product.productCode}
             </p>
           </div>
-          <div className="col-span-1 flex items-center">
-            <p className="text-sm text-black dark:text-white">{product.productBrand}</p>
+          <div className="col-span-1 flex items-center m-1">
+            <p className="text-md text-black dark:text-white">{product.productBrand}</p>
           </div>
-          <div className="col-span-1 flex items-center">
+          <div className="col-span-1 flex items-center m-1">
             <p className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
               <div className="flex items-center space-x-3.5">
-                <Link href={`https://pearl-hygiene.vercel.app/products/${product.id}`} className="hover:text-primary">
+                <Link href={`https://pearl-hygiene.vercel.app/products/${product.id}`} className="hover:text-primary" target="_blank">
                   <svg
                     className="fill-current"
                     width="18"
@@ -177,7 +199,7 @@ const ProductTable: React.FC = () => {
                     />
                     <path
                       d="M6.72245 9.67504C6.38495 9.70317 6.1037 10.0125 6.13182 10.35L6.3287 12.825C6.35683 13.1625 6.63808 13.4157 6.94745 13.4157C6.97558 13.4157 6.97558 13.4157 7.0037 13.4157C7.3412 13.3875 7.62245 13.0782 7.59433 12.7407L7.39745 10.2657C7.39745 9.90004 7.08808 9.64692 6.72245 9.67504Z"
-                      fill=""
+                      fill="red"
                     />
                   </svg>
                 </button>
